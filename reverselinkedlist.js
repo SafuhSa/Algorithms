@@ -19,3 +19,15 @@ var reverseList = function (head) {
   }
   return prev
 };
+
+var reverseList = function (head) {
+  if (!head || !head.next) {
+    return head
+  }
+
+  let tail = reverseList(head.next)
+  head.next.next = head;
+  head.next = null
+
+  return tail
+};
