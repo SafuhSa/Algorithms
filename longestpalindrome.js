@@ -16,6 +16,7 @@
 // Explanation:
 // One longest palindrome that can be built is "dccaccd", whose length is 7.
 
+
 var longestPalindrome = function (s) {
   let hsh = {};
   let count = 0;
