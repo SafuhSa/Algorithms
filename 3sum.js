@@ -8,7 +8,6 @@
 //   [-1, 0, 1],
 //   [-1, -1, 2]
 
-
 var threeSum = function (nums) {
   var results = []
   if (nums.length < 3) return results
