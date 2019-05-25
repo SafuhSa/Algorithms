@@ -2,7 +2,6 @@
 
 
 function invertBinaryTree(tree) {
-  h
   if (!tree) return;
 
   let right = tree.right;
