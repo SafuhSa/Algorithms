@@ -43,6 +43,7 @@ var advantageCount = function (A, B) {
     }
   }
   return res;
+  
   //     let a = A.sort((a, b) => a - b); // [ 8, 12, 24, 32 ]  // [2, 7, 11, 15]
   //     let b = [...B].sort((a, b) => a - b); // [ 11, 13, 25, 32 ] // [1, 4, 10, 11]
   //     let obj = {};
