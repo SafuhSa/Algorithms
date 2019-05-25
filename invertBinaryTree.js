@@ -1,6 +1,5 @@
 // AlogExper invertBinaryTree
 
-
 function invertBinaryTree(tree) {
   if (!tree) return;
 
