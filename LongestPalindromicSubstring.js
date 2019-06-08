@@ -35,7 +35,6 @@ var longestPalindrome = function (str) {
       longest = subStr;
     }
   }
-
   return longest || '';
 };
 

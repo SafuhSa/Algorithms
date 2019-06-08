@@ -21,15 +21,15 @@ var trap = function (height) {
         mleft = height[left]
       } else {
         result += mleft - height[left];
-        left += 1;
       }
+      left += 1;
     } else {
       if (height[right] >= mright) {
         mright = height[right];
       } else {
         result += mright - height[right];
-        right -= 1;
       }
+      right -= 1;
     }
   }
   return result;
