@@ -11,7 +11,6 @@
 // double findMedian() - Return the median of all elements so far.
 
 //   Example:
-
 // addNum(1)
 // addNum(2)
 // findMedian() -> 1.5
