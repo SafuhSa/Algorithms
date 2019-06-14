@@ -10,7 +10,6 @@
 // void addNum(int num) - Add a integer number from the data stream to the data structure.
 // double findMedian() - Return the median of all elements so far.
 
-
 //   Example:
 
 // addNum(1)
