@@ -8,7 +8,7 @@ var Node = function (val) {
   this.left = null;
   this.right = null;
   this.size = 0;
-  this.height = 0;
+  this.height = 1;
 }
 
 var AVLTree = function () {
@@ -19,8 +19,8 @@ AVLTree.prototype.rotateRight = function (root) {
   let newRoot = root.left;
   root.left = root.left.right;
   newRoot.right = root;
-  root.height = height(root);
-  newRoot.height = height(newRoot)
+  root.height = 1 + Math.max(height(root.left), height(root.right));
+  newRoot.height = 1 + Math.max(height(newRoot.left), height(newRoot.right));
   return newRoot;
 }
 
@@ -28,8 +28,8 @@ AVLTree.prototype.rotateLeft = function (root) {
   let newRoot = root.right;
   root.right = root.right.left;
   newRoot.left = root;
-  newRoot.height = height(newRoot);
-  root.height = height(root);
+  newRoot.height = 1 + Math.max(height(newRoot.left), height(newRoot.right));
+  root.height = 1 + Math.max(height(root.left), height(root.right));
   return newRoot;
 }
 
@@ -77,16 +77,49 @@ MedianFinder.prototype.addNum = function(num) {
   this.tree.insert(num);
 };
 
-// MedianFinder.prototype.findMedian = function() {
+var getFarLeft = function(node) {
+  let curr = node.left;
+  let result = node;
+  while(curr) {
+    result = curr;
+    curr = curr.left;
+  }
+
+  return result;
+}
+
+var getFarRight = function(node) {
+  let curr = node.right;
+  let result = node;
+  while(curr) {
+    result = curr;
+    curr = curr.right;
+  }
+
+  return result;
+}
+
+MedianFinder.prototype.findMedian = function() {
+  let root = this.tree.root;
+  let leftH = height(root.left);
+  let rightH = height(root.right);
+  if (leftH === rightH) return root.val;
+
+  if(leftH > rightH) {
+    let fright = getFarRight(root.left);
+    return ((root.val + fright.val)/2);
+  }
+  let fleft = getFarLeft(root.right);
+    return ((root.val + fleft.val)/2)
+  };
   
-  // };
   
-  // let med = new MedianFinder();
-  // med.addNum(1)
-  // med.addNum(2)
-  // med.findMedian()// -> 1.5
-  // med.addNum(3) 
-  // med.findMedian()// -> 2
+  let med = new MedianFinder();
+  med.addNum(1)
+  med.addNum(2)
+  med.findMedian()// -> 1.5
+  med.addNum(3) 
+  med.findMedian()// -> 2
   
   
   //  1 2 3 4 4.5 5 6
@@ -116,21 +149,13 @@ MedianFinder.prototype.addNum = function(num) {
   
   
   // let tree = new AVLTree();
-  // let node = null
-  // // node = 
-  // tree.insert(-10)//, node)
-  // // node = 
-  // tree.insert(2)//, node)
-  // // node = 
-  // tree.insert(13)//, node)
-  // // node = 
-  // tree.insert(-13)//, node)
-  // // node = 
-  // tree.insert(-15)//, node)
-  // // node = 
-  // tree.insert(-17)//, node)
-  // // node = 
-  // tree.insert(20)//, node)
+  // tree.insert(-10)
+  // tree.insert(2)
+  // tree.insert(13)
+  // tree.insert(-13)
+  // tree.insert(-15)
+  // tree.insert(-17)
+  // tree.insert(20)
   
   // let arr = [];
   // function inorder(cpnode) {
