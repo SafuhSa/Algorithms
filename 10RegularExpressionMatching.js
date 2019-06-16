@@ -75,7 +75,7 @@ var isMatch = function (s, p) {
         arr2D[i][j] = arr2D[i - 1][j - 1];
       } else if (pchar === "*") {
         arr2D[i][j] = arr2D[i][j - 2];
-        if (p[j - 2] === "." || p[j - 2] === s[i - 1]) {
+        if (p[j - 2] === "." || p[j - 2] === schar) {
           arr2D[i][j] = arr2D[i][j] || arr2D[i - 1][j];
         }
       } else {
