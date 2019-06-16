@@ -54,30 +54,31 @@
 // Output: false
 
 var isMatch = function (s, p) {
-  let arr2D = new Array(s.length+1).fill(0).map(el=> new Array(p.length+1));
-  arr2D[0][0] = true;
+  let arr2D = new Array(s.length + 1)//.fill(0).map(el=> new Array(p.length+1));
+  arr2D[0] = [true];
 
-  for(let i = 1; i < p.length; i++) {
-    if(p[i-1] === "*") {
-     arr2D[0][i] = arr2D[0][i-2];
-    }else {
+  for (let i = 1; i < p.length + 1; i++) {
+    if (p[i - 1] === "*") {
+      arr2D[0][i] = arr2D[0][i - 2];
+    } else {
       arr2D[0][i] = false;
     }
   }
 
-  for(let i = 1; i < arr2D.length; i++) {
-    for(let j = 1; j < arr2D[0].length; j++) {
-      let pchar = p[j-1];
-      let schar = s[i-1];
+  for (let i = 1; i < arr2D.length; i++) {
+    arr2D[i] = [false];
+    for (let j = 1; j < arr2D[0].length; j++) {
+      let pchar = p[j - 1];
+      let schar = s[i - 1];
 
-      if(pchar === schar || pchar === ".") {
-        arr2D[i][j] = arr2D[i-1][j-1];
-      }else if(pchar === "*") {
-        arr2D[i][j] = arr2D[i][j-2];
-          if(p[j-2] === "." || p[j-2] === s[i-1]) {
-            arr2D[i][j] = arr2D[i][j] || arr2D[i-1][j];
-          }
-      }else {
+      if (pchar === schar || pchar === ".") {
+        arr2D[i][j] = arr2D[i - 1][j - 1];
+      } else if (pchar === "*") {
+        arr2D[i][j] = arr2D[i][j - 2];
+        if (p[j - 2] === "." || p[j - 2] === s[i - 1]) {
+          arr2D[i][j] = arr2D[i][j] || arr2D[i - 1][j];
+        }
+      } else {
         arr2D[i][j] = false;
       }
     }
