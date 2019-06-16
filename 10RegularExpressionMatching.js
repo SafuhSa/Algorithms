@@ -91,7 +91,7 @@ let s = "mississippi"
 let p = "mis*is*p*."
 // Output: false
 console.log(isMatch(s, p));
-// s = "ab"
-// p = ".*"
+s = "ab"
+p = ".*"
 // Output: true
-// console.log(isMatch(s, p));
+console.log(isMatch(s, p));
