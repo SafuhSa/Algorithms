@@ -91,7 +91,26 @@ let s = "mississippi"
 let p = "mis*is*p*."
 // Output: false
 console.log(isMatch(s, p));
+s = "aa"
+p = "a"
+// Output: false
+// Explanation: "a" does not match the entire string "aa".
+console.log(isMatch(s, p));
+s = "aa"
+p = "a*"
+// Output: true
+// Explanation: '*' means zero or more of the precedeng element, 'a'.Therefore, by repeating 'a' once, it becomes "aa".
+console.log(isMatch(s, p));
 s = "ab"
 p = ".*"
 // Output: true
+// Explanation: ".*" means "zero or more (*) of any character (.)".
+console.log(isMatch(s, p));
+s = "aab"
+p = "c*a*b"
+// Output: true
+// Explanation: c can be repeated 0 times, a can be repeated 1 time.Therefore it matches "aab".
+console.log(isMatch(s, p));
+s = "ablmy";
+p = "a*b.*y";
 console.log(isMatch(s, p));
