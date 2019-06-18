@@ -103,10 +103,12 @@ var palindromePairs1 = function(words) {
     let result = [];
     words.forEach((word, idx) => {
 
-      for(let i =0; i <= word.length; i++) { // the equal sign is important
+      for(let i =0; i <= word.length; i++) { // the equal sign is important to check for ""(empty string)
         let left = word.substring(0, i);
         let right = word.substring(i);
-
+        
+          // use the `left` substring as the middle segment of a possible palindrome
+          // reverse `right` and see if it exists in the hash map
         if(isPalindrome(left)) {
           let revRight = reverse(right);
           let val = map.get(revRight);
@@ -114,8 +116,11 @@ var palindromePairs1 = function(words) {
             result.push([val, idx])
           }
         }
-
-        if(right.length > 0 && isPalindrome(right)) {
+      /*
+        already handled case where middle segment is the whole string and looked up the empty string in the hash map
+        added the condition right.length > 0 to avoid running this case twice
+      */
+        if(right.length > 0 && isPalindrome(right)) { 
           let revLeft = reverse(left);
           let val = map.get(revLeft);
           if(val !== undefined && val !== idx) {
