@@ -14,15 +14,15 @@
 
 
 // 336. Palindrome Pairs
-var isPalindrome = function(word) {
-  let hlf = Math.floor(word.length/2)
-  for(let i = 0; i < hlf; i++) {
-    if(word[i] !== word[word.length - 1 - i]) return false;
+var isPalindrome = function (word) {
+  let hlf = Math.floor(word.length / 2)
+  for (let i = 0; i < hlf; i++) {
+    if (word[i] !== word[word.length - 1 - i]) return false;
   }
   return true;
 };
 
-var Trie = function() {
+var Trie = function () {
   this.next = {};
   this.belowPal = [];
   this.wordEnd = false;
@@ -30,52 +30,57 @@ var Trie = function() {
 };
 
 var addWordtoTrie = function (trie, word, idx) {
-  for(let i = word.length -1; i >= 0; i++) {
+  for (let i = word.length - 1; i >= 0; i--) {
     let char = word[i];
-    if(!trie.next[char]) {
+
+    if (!trie.next[char]) {
       trie.next[char] = new Trie();
     }
-    if(isPalindrome(word.substring(0, i+1))) {
-      word.push(idx);
+    if (isPalindrome(word.substring(0, i + 1))) {
+      trie.belowPal.push(idx);
     }
     trie = trie.next[char];
   }
   trie.wordEnd = true;
   trie.wordIdx = idx;
 }
-var getPalindromesWord = function(trie, word) {
-  let set = new Set();
-  for(let i =0; i < word.length; i++) {
+var getPalindromesWord = function (trie, word) {
+  let idxset = new Set();
+  // console.log(word)
+  for (let i = 0; i < word.length; i++) {
     let char = word[i];
-    if(trie.wordEnd) {
-      if(isPalindrome(word.substring(i))) {
-        set.add(trie.wordIdx);
+    // console.log(char)
+    if (trie.wordEnd) {
+
+      if (isPalindrome(word.substring(i))) {
+        idxset.add(trie.wordIdx);
       }
     }
-    trie = trie[char];
+    if (!trie.next[char]) return idxset;
+    trie = trie.next[char];
   }
-  if(trie.wordEnd) set.add(trie.wordIdx);
+  if (trie.wordEnd) idxset.add(trie.wordIdx);
 
   trie.belowPal.forEach(el => {
-    set.add(el);
+    idxset.add(el);
   })
-  return set;
+  return idxset;
 }
 
 var palindromePairs = function (words) {
   let trie = new Trie();
-  words.forEach((word,idx) => {
+  words.forEach((word, idx) => {
     addWordtoTrie(trie, word, idx);
   });
 
-  let result =[];
+
+  let result = [];
   words.forEach((word, idx) => {
-    for(let i =0; i < word.length; i++) {
-      let cand = getPalindromesWord(trie, word);
-      cand.forEach(el => {
-        if(el !== idx) result.push([i, el]);
-      })
-    }
+    let cand = getPalindromesWord(trie, word);
+    // console.log(cand, word, idx)
+    cand.forEach(el => {
+      if (el !== idx) result.push([idx, el]);
+    })
   })
 
   return result;
