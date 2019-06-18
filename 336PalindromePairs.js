@@ -85,12 +85,56 @@ var palindromePairs = function (words) {
 
   return result;
 };
+var reverse = function(word) {
+  let result = '';
+
+  for (let i = word.length-1; i >= 0; i--) {
+    result += word[i];
+  }
+  return result;
+}
+
+var palindromePairs1 = function(words) {
+  let map = new Map();
+
+    words.forEach((word, idx) => {
+      map.set(word, idx);
+    })
+    let result = [];
+    words.forEach((word, idx) => {
+
+      for(let i =0; i <= word.length; i++) { // the equal sign is important
+        let left = word.substring(0, i);
+        let right = word.substring(i);
+
+        if(isPalindrome(left)) {
+          let revRight = reverse(right);
+          let val = map.get(revRight);
+          if(val !== undefined && val !== idx) {
+            result.push([val, idx])
+          }
+        }
+
+        if(right.length > 0 && isPalindrome(right)) {
+          let revLeft = reverse(left);
+          let val = map.get(revLeft);
+          if(val !== undefined && val !== idx) {
+            result.push([idx, val])
+          }
+        }
+      }
+    })
+
+    return result;
+}
 
 let input = ["abcd", "dcba", "lls", "s", "sssll"];
 // Output: [[0,1],[1,0],[3,2],[2,4]] 
 // Explanation: The palindromes are ["dcbaabcd","abcddcba","slls","llssssll"]
 console.log(palindromePairs(input));
+console.log(palindromePairs1(input));
 input = ["bat", "tab", "cat"];
 // Output: [[0, 1], [1, 0]]
 // Explanation: The palindromes are["battab", "tabbat"]
 console.log(palindromePairs(input));
+console.log(palindromePairs1(input));
