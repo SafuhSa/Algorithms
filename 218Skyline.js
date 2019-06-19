@@ -32,14 +32,14 @@ class Heap {
     return this.store[0];
   };
 
-  pop() {
+  removeMax() {
     let node = this.store[0];
     this.store[0] = this.store.pop();
     bubbleDown(0);
     return node;
   };
 
-  push(node) {
+  insert(node) {
     this.store.push(node);
     bubbleUp(this.store.length -1)
   }; 
@@ -55,8 +55,25 @@ class Heap {
     if(rval.height > lval.height) {
       swapIdx = ridx;
     }
+      let swapVal = this.store[swapIdx];
+    if (swapVal.height > this.store[idx].height) {
+      this.store[swapIdx] = this.store[idx];
+      this.store[idx] = swapVal;
+      this.bubbleDown(swapIdx);
+    }
+  };
+[0, 1, 2, 3, 4, 5, 6, 7]
+[1, 2, 3, 4, 5, 6, 7, 8]
+  bubbleUp(idx) {
+    let pidx = Math.floor((idx -1)/2);
+    if(pidx <= 0) return;
+    let pval = this.store[pidx];
 
-
+    if(pval.height < this.store[idx].height) {
+      this.store[pidx] = this.store[idx];
+      this.store[idx] = pval;
+      this.bubbleUp(pidx);
+    }
   }
 }
 
