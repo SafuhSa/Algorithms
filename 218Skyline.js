@@ -32,44 +32,50 @@ class Heap {
     return this.store[0];
   };
 
+  size() {
+    return this.store.length;
+  }
   removeMax() {
     let node = this.store[0];
     this.store[0] = this.store.pop();
-    bubbleDown(0);
+    this.bubbleDown(0);
     return node;
   };
 
-  insert(node) {
+  insert(el) {
+    let node = new Node(el[2])
+    node.left = el[0];
+    node.right = el[1];
+    // console.log(el, node)
     this.store.push(node);
-    bubbleUp(this.store.length -1)
-  }; 
-               
+    this.bubbleUp(this.store.length - 1)
+  };
+
   bubbleDown(idx) {
-    let lidx = (idx * 2) +1;
-    if(lidx >= this.store.length-1) return;
+    let lidx = (idx * 2) + 1;
+    if (lidx >= this.store.length - 1) return;
     let lval = this.store[lidx];
     let swapIdx = lidx;
     let ridx = (idx * 2) + 2;
     let rval = this.store[ridx];
 
-    if(rval.height > lval.height) {
+    if (rval.height > lval.height) {
       swapIdx = ridx;
     }
-      let swapVal = this.store[swapIdx];
+    let swapVal = this.store[swapIdx];
     if (swapVal.height > this.store[idx].height) {
       this.store[swapIdx] = this.store[idx];
       this.store[idx] = swapVal;
       this.bubbleDown(swapIdx);
     }
   };
-[0, 1, 2, 3, 4, 5, 6, 7]
-[1, 2, 3, 4, 5, 6, 7, 8]
   bubbleUp(idx) {
-    let pidx = Math.floor((idx -1)/2);
-    if(pidx <= 0) return;
+    // console.log(this.store, idx)
+    let pidx = Math.floor((idx - 1) / 2);
+    if (pidx < 0) return;
     let pval = this.store[pidx];
 
-    if(pval.height < this.store[idx].height) {
+    if (pval.height < this.store[idx].height) {
       this.store[pidx] = this.store[idx];
       this.store[idx] = pval;
       this.bubbleUp(pidx);
@@ -79,5 +85,55 @@ class Heap {
 
 
 var getSkyline = function (buildings) {
-  let buildings = buildingd
+  let heap = new Heap();
+  heap.insert([-0, Infinity, 0]);
+  let result = [];
+
+  buildings.forEach((el, idx) => {
+    let curr = heap.peek();
+
+    while (curr.right < el[0]) { // the start of the next building is after the end of the current Heightest building
+      let removedMax = heap.removeMax(); // pop the Max
+      let cur = heap.peek(); // current max after poping the max
+
+      while (removedMax.right >= cur.right) { // if there is any building that its right end inside/before the removed max, remove that building
+        heap.removeMax();
+        cur = heap.peek();
+      }
+
+      if (removedMax.right < heap.peek().right && removedMax.height > heap.peek().height) { // if the removed max right border is lest than the current max right border and they are diffrent height push their cross poin
+        result.push([removedMax.right, heap.peek().height])
+      }
+      curr = heap.peek()
+    };
+    let prevH = heap.peek().height;
+    heap.insert(el);
+    if (!(buildings[idx + 1] && el[0] === buildings[idx + 1][0] && buildings[idx + 1][2] > el[2])) { //if current building and the next one have the same start and the next building is not higher  like: [[1, 2, 1], [1, 2, 2], [1, 2, 3]]
+      let nMax = heap.peek();
+      if (nMax.height > prevH) { // if we got a new max after inserting the new value;
+        result.push([nMax.left, nMax.height]);
+      }
+    }
+  });
+  // after the forEach we still have building inside our heap, same logic here as inside the forEach
+  let curr = heap.peek();
+  while (curr.height !== 0) {
+    let removedMax = heap.removeMax();
+    let cur = heap.peek();
+
+    while (removedMax.right >= cur.right) {
+      heap.removeMax();
+      cur = heap.peek();
+    }
+
+    if (removedMax.right < heap.peek().right && removedMax.height > heap.peek().height) {
+      result.push([removedMax.right, heap.peek().height])
+    }
+    curr = heap.peek();
+  }
+
+
+  return result;
 };
+
+console.log(getSkyline([[2, 9, 10], [3, 7, 15], [5, 12, 12], [15, 20, 10], [19, 24, 8]]))
