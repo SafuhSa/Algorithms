@@ -39,6 +39,9 @@ class Heap {
     this.bubbleUp(this.store.length-1);
   }
 
+  peek() {
+    return this.store[0];
+  }
   bubbleDown(idx) {
     let lidx = (2 * idx) +1;
     let ridx = (2 * idx) +2;
@@ -52,7 +55,7 @@ class Heap {
       swapIdx = lidx;
     }
     let swapVal = this.store[swapIdx];
-    if(swapVal >= this.store[idx]) return;
+    if(swapVal.frq >= this.store[idx].frq) return;
 
     this.store[swapIdx] = this.store[idx];
     this.store[idx] = swapVal;
@@ -64,7 +67,7 @@ class Heap {
     if (pidx <= 0) return;
     let pval = this.store[pval];
 
-    if(pval <= this.store[idx]) return;
+    if(pval.frq <= this.store[idx].frq) return;
     this.store[pidx] = this.store[idx];
     this.store[idx] = pval;
     this.bubbleUp[pidx];
@@ -78,5 +81,23 @@ var topKFrequent = function (nums, k) {
     hsh[el]++;
   });
 
-  
+  let heap = new Heap();
+  for(let key in hsh) {
+    let frq = hsh[key];
+    if(heap.store.length === k) {
+      if (heap.peek().frq > frq) continue;
+      heap.pop();
+    }
+    heap.push(key, key)
+  }
+
+  let result = new Array(k);
+  let m =k-1;
+
+  while(m >= 0) {
+    result[m] = heap.pop();
+    m-=1;
+  }
+
+  return result;
 }; 
