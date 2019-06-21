@@ -51,8 +51,23 @@ class Heap {
     }else {
       swapIdx = lidx;
     }
+    let swapVal = this.store[swapIdx];
+    if(swapVal >= this.store[idx]) return;
 
-    if(this.store[swapIdx] > )
+    this.store[swapIdx] = this.store[idx];
+    this.store[idx] = swapVal;
+    this.bubbleDown(swapIdx);
+  }
+
+  bubbleUp(idx) {
+    let pidx = Math.floor((idx-1)/2);
+    if (pidx <= 0) return;
+    let pval = this.store[pval];
+
+    if(pval <= this.store[idx]) return;
+    this.store[pidx] = this.store[idx];
+    this.store[idx] = pval;
+    this.bubbleUp[pidx];
   }
 }
 
