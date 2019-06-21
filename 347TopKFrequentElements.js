@@ -72,5 +72,11 @@ class Heap {
 }
 
 var topKFrequent = function (nums, k) {
+  let hsh = {};
+  nums.forEach(el => {
+    if(!hsh[el]) hsh[el] = 0;
+    hsh[el]++;
+  });
 
-};
+  
+}; 
