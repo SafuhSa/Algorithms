@@ -27,12 +27,14 @@ class Heap {
 
   pop() {
     let val =this.store[0];
+    if(this.store.length <= 1) return this.store.pop();
     this.store[0] = this.store.pop();
     this.bubbleDown(0);
     return val;
   }
 
   push(val, frq) {
+    // console.log(val, frq)
     let node = new Node(val, frq);
 
     this.store.push(node);
@@ -46,10 +48,10 @@ class Heap {
     let lidx = (2 * idx) +1;
     let ridx = (2 * idx) +2;
     if(lidx >= this.store.length) return;
-    let lval = this.store[lval];
+    let lval = this.store[lidx];
     let rval = this.store[ridx];
     let swapIdx;
-    if(rval > lval) {
+    if(rval && rval.frq < lval.frq) {
       swapIdx = ridx;
     }else {
       swapIdx = lidx;
@@ -64,40 +66,65 @@ class Heap {
 
   bubbleUp(idx) {
     let pidx = Math.floor((idx-1)/2);
-    if (pidx <= 0) return;
-    let pval = this.store[pval];
+    if (pidx < 0) return;
+    let pval = this.store[pidx];
 
     if(pval.frq <= this.store[idx].frq) return;
     this.store[pidx] = this.store[idx];
     this.store[idx] = pval;
-    this.bubbleUp[pidx];
+    this.bubbleUp(pidx);
   }
 }
 
 var topKFrequent = function (nums, k) {
-  let hsh = {};
+  let map = new Map();
   nums.forEach(el => {
-    if(!hsh[el]) hsh[el] = 0;
-    hsh[el]++;
+    let val = map.get(el) || 0
+    map.set(el, val+1)
   });
-
+// console.log(map)
   let heap = new Heap();
-  for(let key in hsh) {
-    let frq = hsh[key];
-    if(heap.store.length === k) {
-      if (heap.peek().frq > frq) continue;
-      heap.pop();
+
+    map.forEach((frq, key) => {
+      // console.log('key', frq, key, heap.store)
+      if (heap.store.length < k  ||  heap.peek().frq < frq ) {
+      if (heap.store.length === k) heap.pop();
+      heap.push(key, frq)
     }
-    heap.push(key, key)
-  }
+    // console.log(heap.store)
+  })
 
   let result = new Array(k);
   let m =k-1;
 
-  while(m >= 0) {
-    result[m] = heap.pop();
+  while(m >= 0 && heap.store.length) {
+    result[m] = heap.pop().val;
     m-=1;
   }
 
   return result;
 }; 
+
+let nums = [1, 1, 1, 2, 2, 3], k = 2
+// Output: [1, 2]
+// console.log(topKFrequent(nums, k))
+nums = [3, 0, 1, 0];
+k = 1;
+// console.log(topKFrequent(nums, k))
+nums = [4, -2,-2, 5, 4,2, 1, 2, 4, -9];
+k = 10
+// console.log(topKFrequent(nums, k))
+
+let output =   ["qengse", "nsfspyox", "htpvnmozay", "zskaqzwo", "fqizrrnmif", "hdemkfr", "pwqvwmlgri", "glarko", "qggx"]
+let expected = ["nsfspyox", "qengse", "htpvnmozay", "fqizrrnmif", "glarko", "hdemkfr", "pwqvwmlgri", "qggx", "zskaqzwo"]
+let dif = [];
+for(let num of output) {
+  let idx = expected.indexOf(num)
+  if(idx >= 0) {
+    expected.splice(idx, 1)
+  }else {
+    dif.push(num);
+  }
+}
+
+console.log('output', output.length, 'exp',expected.length, expected, dif)
