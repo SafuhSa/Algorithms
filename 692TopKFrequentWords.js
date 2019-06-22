@@ -109,18 +109,13 @@ var topKFrequent = function (words, k) {
     let val = map.get(el) || 0
     map.set(el, val + 1)
   });
-  // "nsfspyox", "qengse"
-  console.log('res', map.get("nsfspyox"), map.get("qengse"))
   let heap = new Heap();
-
+  
   map.forEach((frq, key) => {
-    // if (key === "qengse") console.log('qengse')
-    // if (key === "nsfspyox") console.log('nsfspyox')
     if (heap.store.length < k || heap.peek().frq <= frq) {
       heap.push(key, frq);
       if (heap.store.length > k) heap.pop();
     }
-    // console.log(heap.store)
   })
 
 
