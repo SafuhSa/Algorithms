@@ -30,6 +30,27 @@
 // Output: 0
 
 // Explanation: The endWord "cog" is not in wordList, therefore no possible transformation.
+
+var bfs = function(stack, dicn, visted, otherVisted) {
+  let word, level;
+  [word, level] = stack.shift();
+
+  for(let i =0; i < word.length; i++) {
+    let curr = word.substring(0, i) + "*" + word.substring(i+1);
+    let nextWords = dicn.get(curr);
+    if(!nextWords) continue;
+    for(let word of nextWords) {
+      if(otherVisted.has(word)) {
+        return level + otherVisted.get(word);
+      }
+      if(!visted.has(word)) {
+        stack.push([word, level+1]);
+        visted.set(word, level+1);
+      }
+    }
+  }
+}
+
 var ladderLength = function (beginWord, endWord, wordList) {
   if(!beginWord || !endWord || !wordList.length || !wordList.includes(endWord)) return 0;
 
@@ -45,8 +66,24 @@ var ladderLength = function (beginWord, endWord, wordList) {
       }
       nextWords.push(word);
     }
-  }
+  };
   
+  let vistedBegin = new Map();
+  vistedBegin.set(beginWord, 1);
+  beginStack = [[beginWord, 1]];
+
+  let vistedEnd = new Map();
+  vistedEnd.set(endWord, 1);
+  endStack = [[endWord, 1]];
+
+  while(beginStack.length && endStack.length) {
+
+    let ans = bfs(beginStack, dicn, vistedBegin, vistedEnd);
+    if(ans) return ans;
+    ans = bfs(endStack, dicn, vistedEnd, vistedBegin)
+    if(ans) return ans;
+  }
+  return 0;
 };
 
 // var ladderLength = function (beginWord, endWord, wordList) {
