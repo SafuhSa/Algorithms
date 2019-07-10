@@ -1,3 +1,4 @@
+// https://www.hackerrank.com/challenges/sherlock-and-anagrams/problem
 function sherlockAndAnagrams(s) {
   let count = 0;
   let hsh = {};

@@ -1,3 +1,5 @@
+// https://www.hackerrank.com/challenges/recursive-digit-sum/problem
+
 // function superDigit(n, k) {
 //   if ((n * k) < 11) return (n * k);
 
