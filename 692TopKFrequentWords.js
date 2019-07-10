@@ -23,6 +23,15 @@ var Node = function (val, frq) {
   this.val = val;
 }
 
+var Heap = function (props) {
+  this.state = {};
+}
+
+
+Heap.prototype.render = function () {
+  
+}
+
 class Heap {
   constructor() {
     this.store = [];
