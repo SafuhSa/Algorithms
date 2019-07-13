@@ -183,15 +183,15 @@ function findPointPos(matrix, i, j, r) {
 
 function matrixRotation(matrix, r) {
   // let layer = Math.ceil(Math.min(matrix.length, matrix[0].length) / 2);
-  res = '';
   for(let i = 0; i < matrix.length; i++) {
+    let res = '';
     for(let j = 0; j < matrix[i].length; j++) {
       let pos = findPointPos(matrix, i, j, r)
       res += `${matrix[pos[0]][pos[1]]} `;
     }
-    res += '\n';
+    // res += '\n';
+    console.log(res);
   }
-  console.log(res);
 }
 // [
 //  0 [1,   2,  12,  4,  4],
