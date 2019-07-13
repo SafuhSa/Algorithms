@@ -114,24 +114,110 @@
 //     moveDown(val, matrix, left, diff, visted,  layer);
 //   }
 // };
+function findPointPos(matrix, i, j, r) {
+  let layer = Math.min(i, j, matrix[i].length - 1 - j, matrix.length - 1 - i);
+  let layerlen = (matrix.length - layer*2) * 2 + (matrix[i].length - 2 - layer*2) * 2;
+  r = r % layerlen;
+  let MR, MD, ML, MU;
+  if(i === layer) { 
+    MR = true;
+  }else if (j === layer) {
+    MU = true;
+  }else if (j ===  matrix[i].length - 1 - layer) {
+    MD = true;
+  }else { // i === matirx.length - 1 - layer
+    ML = true;
+  }
+  let ni = i;
+  let nj = j;
+  while (r > 0) {
+    let rightLimit = matrix[ni].length - 1 - layer;
+    let bottomLimit = matrix.length - 1 - layer;
+    let leftLimit = layer;
+    let topLimit = layer;
+    if(MR) {
+      if (rightLimit >= (nj + r)) {
+        nj += r;
+        break;
+      };
+      MR = false;
+      MD = true;
+      r -= (rightLimit - nj);
+      nj = rightLimit;
+    };
+    if(MD) {
+      if (bottomLimit >= (ni + r)) {
+        ni += r;
+        break;
+      };
+      MD = false;
+      ML = true;
+      r -= (bottomLimit - ni);
+      ni = bottomLimit;
+    };
+    if(ML) {
+      if (leftLimit <= (nj - r)) {
+        nj -= r;
+        break;
+      };
+      ML = false;
+      MU = true;
+      r -= (nj - leftLimit);
+      nj = leftLimit;
+    };
+    if(MU) {
+      if(topLimit <= (ni - r)) {
+        ni -= r
+        break;
+      }
+      MU = false;
+      MR = true;
+      r -= (ni - topLimit);
+      ni = topLimit;
+    }
+  }
 
+  return [ni, nj];
+};
+
+
+function matrixRotation(matrix, r) {
+  // let layer = Math.ceil(Math.min(matrix.length, matrix[0].length) / 2);
+  res = '';
+  for(let i = 0; i < matrix.length; i++) {
+    for(let j = 0; j < matrix[i].length; j++) {
+      let pos = findPointPos(matrix, i, j, r)
+      res += `${matrix[pos[0]][pos[1]]} `;
+    }
+    res += '\n';
+  }
+  console.log(res);
+}
+// [
+//  0 [1,   2,  12,  4,  4],
+//  1 [5,   6,  16,  8,  8],
+//  2 [3,   7,  61,  5,  4],
+//  3 [9,  10, 11, 12, 12], //(5, 3)  Math.min(i, j) \\ Math.min(M[i].length - 1 - j, M.length - 1 - i)
+//  4 [19,  19, 1, 14, 18],
+//  5 [13, 14, 41, 16, 16]
+// ];
 let matrix = [
   [1, 2, 3, 4],
   [5, 6, 7, 8],
   [9, 10, 11, 12],
   [13, 14, 15, 16]
 ];
-let r = 1;
+let r = 2;
 let expected = [
  [3, 4, 8, 12],
  [2, 11, 10, 16],
- [1, 7, 6, 15],
+ [1, 7, 6, 15],        // Math.min(i, j) \\ Math.min(M[i].length - 1 - j, M.length - 1 - i)
  [5, 9, 13, 14]
 ]
 // console.log(matrix)
-// console.log(' ')
+// // console.log(' ')
 // console.log(matrixRotation(matrix, r));
-// console.log(' ')
+// // console.log(' ')
 // console.log('expexted');
 // console.log(expected)
 
@@ -151,9 +237,9 @@ expected = [
  [4, 3, 2 ,1]
 ];
 console.log(matrix)
-console.log(' ')
+// console.log(' ')
 console.log(matrixRotation(matrix, r));
-console.log(' ')
+// console.log(' ')
 console.log('expexted');
 console.log(expected)
 // console.log('expexted', expected);
