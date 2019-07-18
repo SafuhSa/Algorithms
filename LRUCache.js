@@ -45,7 +45,6 @@ var LRUCache = function (capacity) {
   this.cache = {};
 };
 LRUCache.prototype.get = function (key) {
-  if (key === 1) console.log(this.cache);
   let node = this.cache[key];
   if (node === undefined) return -1;
   this.put(key, node.val);
@@ -59,7 +58,10 @@ LRUCache.prototype.remove = function (key) {
 
   if (node === this.tail) {
     this.tail = this.tail.prev;
-    if (!this.tail) this.tail = this.head;
+    if (this.size === 0) this.head = null;
+    delete this.cache[key];
+    this.size--;
+    return node;
   }
 
   if (node.next) {
