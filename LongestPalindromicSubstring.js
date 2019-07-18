@@ -10,33 +10,41 @@
 
 // Input: "cbbd"
 // Output: "bb"
+// "amkkaakkmmcbcmmkaakij"
 
-var longestPalindrome = function (str) {
-  let arr = [];
-  let longest = str[0];
+//  "d  n  c  d  b  b  d  c  d  r"
+//  [0, 0, 0, 0  ]
+
+
+var longestPalindrome = function (strr) {
+  let str = '$' + strr.split('').join('$') + '$';
+  let arr = new Array(str.length);
+  let radius = 0;
+  let center = 0;
+  let bRadius = 0;
+  let bCenter = 0;
 
   for (let i = 0; i < str.length; i++) {
-    if (str[i] === str[i + 1]) {
-      arr.push({ endd: i + 1, start: i })
+    const end = radius + center;
+    if (end === str.length - 1) break;
+    arr[i] = 1;
+    if (i < end) {
+      let diff = end - i;
+      let imirro = center - (i - center);
+      arr[i] = Math.min(arr[imirro], diff);
     }
-    if (str[i] === str[i + 2]) {
-      arr.push({ endd: i + 2, start: i })
-    }
-  }
-  // console.log(arr)
-  for (let sub of arr) {
-    while (sub.start >= 0 && str[sub.start] === str[sub.endd]) {
-      sub.start -= 1;
-      sub.endd += 1;
-    }
-    // console.log(sub)
-    let subStr = str.slice(sub.start + 1, sub.endd)
-    if (longest.length < subStr.length) {
-      longest = subStr;
-    }
-  }
-  return longest || '';
-};
+    while (str[i - arr[i]] === str[i + arr[i]] && i + arr[i] < str.length && i - arr[i] >= 0) arr[i]++;
 
-// "dncdbbdcdr"
-// "amkkaakkmmcbcmmkaakij"
+    if ((i + arr[i]) > end) {
+      radius = arr[i];
+      center = i;
+    }
+
+    if (arr[i] > bRadius) {
+      bCenter = i;
+      bRadius = arr[i];
+    }
+  }
+
+  return strr.substring((bCenter - bRadius + 1) / 2, (bCenter + bRadius - 1) / 2)
+}

@@ -56,49 +56,36 @@ LRUCache.prototype.remove = function (key) {
   let node = this.cache[key];
   if (node === undefined) return;
 
-  if (node === this.tail) {
-    this.tail = this.tail.prev;
-    if (this.size === 0) this.head = null;
-    delete this.cache[key];
-    this.size--;
-    return node;
-  }
-
   if (node.next) {
     node.next.prev = node.prev;
+  } else {
+    this.tail = node.prev
   };
 
   if (node.prev) {
     node.prev.next = node.next;
+  } else {
+    this.head = node.next;
   };
 
   delete this.cache[key];
-  this.size--;
+  this.size -= 1;
   return node;
 }
-
-
 LRUCache.prototype.put = function (key, value) {
   this.remove(key);
-  if (this.capacity === this.size) this.remove(this.tail.key);
-  
   let node = new Node(value, key);
-  if (this.size === 0) {
-    this.head = node;
-    this.tail = node;
-  } else if (this.size === 1) {
-    this.head = node;
-    this.tail.prev = node;
-    this.head.next = this.tail;
-  } else {
-    this.head.prev = node;
-    node.next = this.head;
-    this.head = node;
-  }
+
+  if (this.head) this.head.prev = node;
+  if (!this.tail) this.tail = node;
+  node.next = this.head;
+  this.head = node;
 
   this.size += 1;
   this.cache[key] = node;
+  if (this.capacity < this.size) this.remove(this.tail.key);
 };
+
 
 // ________________________________________________________
 
