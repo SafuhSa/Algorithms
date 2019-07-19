@@ -38,13 +38,12 @@ function quickselect(points, k, low, end) {
     }
   }
   swap(points, swapIdx, pivot);
-
   if (swapIdx === k - 1) return points;
 
   if (swapIdx < k - 1) {
-    return quickselect(points, k, low, swapIdx - 1);
+    return quickselect(points, k, swapIdx + 1, end)
   } else {
-    return quickselect(points, k - swapIdx, swapIdx + 1, end)
+    return quickselect(points, k, low, swapIdx - 1);
   }
 }
 
@@ -62,12 +61,26 @@ function getDist(pos) {
 let points = [[3, 3], [5, -1], [-2, 4]];
 let K = 2;
 let expected = [[3, 3], [-2, 4]];
-//   (The answer[[-2, 4], [3, 3]] would also be accepted.)
+  // (The answer[[-2, 4], [3, 3]] would also be accepted.)
 console.log('output', kClosest(points, K));
 console.log('expected', expected);
 
 points = [[0, 1], [1, 0]];
 k = 2;
 expected = [[0, 1], [1, 0]];
+console.log('output', kClosest(points, K));
+console.log('expected', expected);
+      // [ 40,           53,     117,     109,       65,   68]
+points = [[-2, -6], [-7, -2], [-9, 6], [10, 3], [-8, 1], [2, 8]];
+K = 5;
+expected = [[-2, -6], [-7, -2], [10, 3], [-8, 1], [2, 8]];;
+console.log('output', kClosest(points, K));
+console.log('expected', expected);
+
+//       [   81,     149,      20,       90,     82,    26 ]
+points = [[9, 0], [7, 10], [-4, -2], [3, -9], [9, 1], [-5, -1]]
+K = 5
+expected = [[9, 0], [-4, -2], [3, -9], [9, 1], [-5, -1]];
+// console.log(points.map(el => getDist(el)))
 console.log('output', kClosest(points, K));
 console.log('expected', expected);
