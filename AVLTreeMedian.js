@@ -168,5 +168,3 @@ MedianFinder.prototype.findMedian = function() {
   // console.log(tree.root.val)
   // inorder(tree.root)
   // console.log(arr)
-  
-  
