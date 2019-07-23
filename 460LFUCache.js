@@ -22,13 +22,22 @@ cache.put(4, 4);    // evicts key 1.
 cache.get(1);       // returns -1 (not found)
 cache.get(3);       // returns 3
 cache.get(4);       // returns 4
- */
+*/
+
+var Node = function (key = null, val = null, lfu = null, next = null, prev = null) {
+  this.key = key;
+  this.val = val;
+  this.next = next;
+  this.prev = prev;
+  this.lfu = lfu;
+};
 
 var LFUnode = function (rank = 0, next = null, prev = null) {
   this.rank = rank;
   this.next = next;
   this.prev = prev;
   this.size = 0;
+
   this.head = new Node();
   this.tail = new Node();
   this.head.next = this.tail;
@@ -56,28 +65,25 @@ LFUnode.prototype.remove = function (node) {
   node.next.prev = node.prev;
   node.next = null;
   node.prev = null;
+  node.lfu = null;
   this.size--;
   if (this.size === 0) this.removeSelf();
   return node;
 };
+
 LFUnode.prototype.insert = function (node) {
-  this.size++;
   node.next = this.head.next;
   node.prev = this.head;
+  node.lfu = this;
   this.head.next.prev = node;
   this.head.next = node;
+  this.size++;
+  return node;
 };
 
-var Node = function (key = null, val = null, lfu = null, next = null, prev = null) {
-  this.key = key;
-  this.val = val;
-  this.next = next;
-  this.prev = prev;
-  this.lfu = lfu;
-}
 
 var LFUCache = function (capacity) {
-  this.capacity = capacity;
+  this.capacity = capacity || 0;
   this.size = 0;
   this.cache = {};
 
@@ -97,31 +103,30 @@ LFUCache.prototype.get = function (key) {
 
 LFUCache.prototype.increaseCount = function (key) {
   let node = this.cache[key];
-  console.log(node)
-  let prev = node.lfu;
-  let curr = prev.next;
-  if (!curr || curr.rank !== prev.rank + 1) curr = this.LFUinsert(prev, prev.rank + 1);
-  prev.remove(node);
-  curr.insert(node);
+  let LFUnode = node.lfu;
+  let nxtLFUnode = LFUnode.next;
+  if (nxtLFUnode.rank !== LFUnode.rank + 1) nxtLFUnode = this.LFUinsert(LFUnode, LFUnode.rank + 1);
+  LFUnode.remove(node);
+  nxtLFUnode.insert(node);
 };
 
 LFUCache.prototype.put = function (key, value) {
+  if (!this.capacity) return;
   let node = this.cache[key];
   if (node) {
     node.val = value;
     this.increaseCount(key);
     return value;
   };
-
   if (this.size === this.capacity) this.pop();
+
   node = new Node(key, value);
+  let fstLFUNode = this.head.next;
+  if (fstLFUNode.rank !== 1) fstLFUNode = this.LFUinsert(this.head, 1);
 
-  let firstCntNode = this.head.next;
-  if (firstCntNode.rank !== 1) firstCntNode = this.LFUinsert(this.head, 1);
+  node.lfu = fstLFUNode;
 
-  node.lfu = firstCntNode;
-
-  firstCntNode.insert(node);
+  fstLFUNode.insert(node);
 
   this.cache[key] = node;
   this.size++;
@@ -142,4 +147,31 @@ LFUCache.prototype.LFUinsert = function (prevNode, rank) {
   prevNode.next = temp;
 
   return temp;
-}
+};
+
+let cache = new LFUCache(2);
+console.log('put(1, 1)', cache.put(1, 1));
+console.log('put(2, 2)', cache.put(2, 2));
+console.log('get(1)', cache.get(1), 'expected', 1);       // returns 1
+console.log('put(3, 3)', cache.put(3, 3));    // evicts key 2
+// this.caches[2].
+// console.log('this.caches[2]', cache.cache[2].lfu.rank)
+// console.log('this.caches[1]', cache.cache[1].lfu.rank)
+console.log('get(2)', cache.get(2), 'expected', -1);       // returns -1 (not found)
+console.log('get(3)', cache.get(3),'expected',3);       // returns 3.
+console.log('put(4, 4)', cache.put(4, 4));    // evicts key 1.
+console.log('get(1)', cache.get(1), 'expected', -1);       // returns -1 (not found)
+// console.log('cache.head==', cache.head)
+// let one = cache.head.next
+// console.log('cache.head.next.prev==', one.next)
+// console.log('')
+// console.log('rank =====',cache.cache[3].lfu.rank)
+console.log('get(3)', cache.get(3), 'expected', 3);// returns 3
+console.log('get(4)', cache.get(4), 'expected', 4); // returns 4
+
+
+// freq:  1  2   3
+//        4  3 
+//           1
+//              
+       
